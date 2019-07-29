@@ -11,20 +11,22 @@ function App() {
   const [operand, setOperand] = useState("");
 
   const updateValue = (val) => {
-    // Prevent leading zeros
-    if (currentValue === "0" || currentValue === 0) {
-      setCurrentValue(0);
-      // max 1 decimal value
-    } else if (val === "." && currentValue.includes(".")) {
+    if (val === "." && currentValue.includes(".")) {
       setCurrentValue(currentValue);
     } else {
       let appendDigits = currentValue + val;
+      // Prevent leading zeros
+      if (appendDigits.charAt(0) === "0") {
+        appendDigits = appendDigits.slice(1);
+      }
       setCurrentValue(appendDigits);
     }
   };
 
   const performOperation = (val) => {
-    if (val === "AC") {
+    if (val === "=") {
+      calculate();
+    } else if (val === "AC") {
       clearDisplayField();
     } else if (val === "-" && currentValue.length === 0) {
       setCurrentValue(val + currentValue);
