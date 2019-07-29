@@ -1,0 +1,38 @@
+.Digit {
+  font-size: 1.4rem;
+  color: #fff;
+  cursor: pointer;
+  background: #757575;
+  outline: none;
+  box-shadow: inset -1px -1px 14px -1px rgba(0, 0, 0, 0.75);
+  border-radius: 0.5em;
+  font-family: "Roboto Mono", monospace;
+  font-weight: bold;
+}
+
+.Digit:active {
+  box-shadow: none;
+}
+
+#clear {
+  background: #e53935;
+  grid-column: 1 / 3;
+}
+
+#zero {
+  grid-column: 1 / 3;
+}
+
+#equals {
+  background: #0288d1;
+  grid-row: 4 / 6;
+  grid-column-start: 4;
+  grid-column-end: 5;
+}
+
+#divide,
+#multiply,
+#subtract,
+#add {
+  background: #455a64;
+}

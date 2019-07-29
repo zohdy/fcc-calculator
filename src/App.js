@@ -1,24 +1,104 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Digit from "./components/Digit";
+import Display from "./components/Display";
+import { digits } from "./data/digits";
 
 function App() {
+  const [currentValue, setCurrentValue] = useState("");
+  const [operatorValue, setOperatorValue] = useState("");
+  const [result, setResult] = useState("");
+  const [operand, setOperand] = useState("");
+
+  const updateValue = (val) => {
+    // Prevent leading zeros
+    if (currentValue === "0" || currentValue === 0) {
+      setCurrentValue(0);
+      // max 1 decimal value
+    } else if (val === "." && currentValue.includes(".")) {
+      setCurrentValue(currentValue);
+    } else {
+      let appendDigits = currentValue + val;
+      setCurrentValue(appendDigits);
+    }
+  };
+
+  const performOperation = (val) => {
+    if (val === "AC") {
+      clearDisplayField();
+    } else if (val === "-" && currentValue.length === 0) {
+      setCurrentValue(val + currentValue);
+    } else if (currentValue === "-" && operand) {
+      setOperatorValue(val);
+      setCurrentValue("");
+    } else {
+      setOperatorValue(val);
+      calculate();
+    }
+  };
+
+  const calculate = () => {
+    if (currentValue && operand) {
+      let operationResult;
+      let value1 = parseFloat(currentValue);
+      let value2 = parseFloat(operand);
+
+      switch (operatorValue) {
+        case "+":
+          operationResult = value2 + value1;
+          break;
+        case "-":
+          operationResult = value2 - value1;
+          break;
+        case "*":
+          operationResult = value2 * value1;
+          break;
+        case "/":
+          operationResult = value2 / value1;
+          break;
+        default:
+          return;
+      }
+      setCurrentValue("");
+      setResult(operationResult);
+      setOperand(operationResult);
+    } else if (currentValue === "-") {
+      setOperand("");
+    } else if (currentValue) {
+      setOperand(currentValue);
+      setCurrentValue("");
+    }
+  };
+
+  const clearDisplayField = () => {
+    setResult("");
+    setCurrentValue("");
+    setOperand("");
+    setOperatorValue("");
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Display
+        currentValue={currentValue}
+        operand={operand}
+        result={result}
+        operatorValue={operatorValue}
+      />
+      <div className="calculator">
+        {digits.map((digit) => {
+          return (
+            <Digit
+              key={digit.id}
+              id={digit.id}
+              value={digit.value}
+              updateValue={updateValue}
+              performOperation={performOperation}
+              operation={digit.operation}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
